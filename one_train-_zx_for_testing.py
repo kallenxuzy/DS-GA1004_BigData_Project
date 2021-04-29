@@ -39,7 +39,7 @@ def main(spark, train_path, val_path, indexer_model):
     #            .agg(expr('collect_list(track_idx) as tracks'))
 
     als = ALS(maxIter=1, userCol ='user_idx', itemCol = 'track_idx', implicitPrefs = True, \
-        nonnegative=True, ratingCol = 'count', rank = 10, regParam = 1, alpha = 1)
+        nonnegative=True, ratingCol = 'count', rank = 10, regParam = 1, alpha = 1, coldStartStrategy="drop")
     model = als.fit(train)
 
     rec_result = model.recommendForUserSubset(user_id,500)
