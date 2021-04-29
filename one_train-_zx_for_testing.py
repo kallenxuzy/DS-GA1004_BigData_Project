@@ -39,7 +39,7 @@ def main(spark, train_path, val_path, indexer_model):
     #            .agg(expr('collect_list(track_idx) as tracks'))
 
     als = ALS(maxIter=1, userCol ='user_idx', itemCol = 'track_idx', implicitPrefs = True, \
-        nonnegative=True, ratingCol = 'count', rank = 10, regParam = 1, alpha = 1, coldStartStrategy="drop")
+        nonnegative=True, ratingCol = 'count', rank = 10, regParam = 1, alpha = 1)
     model = als.fit(train)
 
     rec_result = model.recommendForUserSubset(user_id,500)
@@ -56,10 +56,10 @@ def main(spark, train_path, val_path, indexer_model):
     #true_tracks = true_tracks.select('user_idx', '')
     pred_RDD = rec_result.join(true_tracks, 'user_idx').rdd.map(lambda row: ([rec.track_idx for rec in row["recommendations"]],row["true_track_idx"])) #(row['tracks'], row['true_track_idx']))
     ranking_metrics = RankingMetrics(pred_RDD)
-    map_ = ranking_metrics.meanAveragePrecision
-    mpa = ranking_metrics.precisionAt(500)
-    ndcg = ranking_metrics.ndcgAt(500)
-    print('map score: ', map_, 'ndcg score: ', ndcg, 'map score: ', mpa)
+    #map_ = ranking_metrics.meanAveragePrecision
+    #mpa = ranking_metrics.precisionAt(500)
+    #ndcg = ranking_metrics.ndcgAt(500)
+    #print('map score: ', map_, 'ndcg score: ', ndcg, 'map score: ', mpa)
 
 
 
