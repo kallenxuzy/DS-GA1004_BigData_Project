@@ -46,12 +46,15 @@ def main(spark, train_path, val_path, indexer_model):
     pred_tracks = rec_result.select('user_idx','recommendations.track_idx')\
                 .withColumnRenamed('recommendations.track_idx', 'tracks').sort('user_idx')
 
+    true_tracks = val.select('user_idx', 'track_idx')\
+                    .groupBy('user_idx')\
+                    .agg(expr('collect_list(track_idx) as true_item'))
     #w = Window.partitionBy('user_idx').orderBy(col('count').desc())
-    val = val.sort('user_idx')
     #true_tracks = val.select('user_idx', 'track_idx', 'count', F.rank().over(w).alias('rank')) \
-    #                .where('rank <= {0}'.format(500)).groupBy('user_idx') \
-    #                .agg(expr('collect_list(track_idx) as tracks'))
-    pred_RDD = pred_tracks.join(val, 'user_idx', 'inner').rdd.map(lambda row: (row[1], row[2]))
+                    #.where('rank <= {0}'.format(500)).groupBy('user_idx') \
+                    #.agg(expr('collect_list(track_idx) as tracks'))
+    #true_tracks = true_tracks.select('user_idx', '')
+    pred_RDD = pred_tracks.join(true_tracks, 'user_idx', 'inner').rdd.map(lambda row: (row[1], row[2]))
     ranking_metrics = RankingMetrics(pred_RDD)
     map_ = ranking_metrics.meanAveragePrecision
     mpa = ranking_metrics.precisionAt(500)
