@@ -74,11 +74,12 @@ if __name__ == "__main__":
     conf.set("spark.default.parallelism", "40")
     conf.set("spark.sql.shuffle.partitions", "40")
     spark = SparkSession.builder.config(conf=conf).appName('first_train').getOrCreate()
+    sc = spark.sparkContext
 
-    #spark = SparkSession.builder.appName('first_step').getOrCreate()
+    spark = SparkSession.builder.appName('first_step').getOrCreate()
     # Get file_path for dataset to analyze
     train_path = sys.argv[1]
     val_path = sys.argv[2]
     indexer_model = sys.argv[3]
 
-    main(spark, train_path, val_path, indexer_model)
+    main(spark, sc, train_path, val_path, indexer_model)
