@@ -23,7 +23,7 @@ import pyspark.sql.functions as F
 from pyspark.sql import Window
 from pyspark.sql.functions import col, expr
 
-def main(spark, train_path, val_path, indexer_model):
+def main(spark, sc, train_path, val_path, indexer_model):
     '''
     '''
     train = spark.read.parquet(train_path)
@@ -66,13 +66,14 @@ def main(spark, train_path, val_path, indexer_model):
 # Only enter this block if we're in main
 if __name__ == "__main__":
     conf = SparkConf()
-    conf.set("spark.executor.memory", "16G")
-    conf.set("spark.driver.memory", '16G')
-    conf.set("spark.executor.cores", "4")
-    conf.set('spark.executor.instances','10')
-    conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    conf.set("spark.default.parallelism", "40")
-    conf.set("spark.sql.shuffle.partitions", "40")
+    conf.set("spark.executor.memory", "4g")
+    conf.set("spark.driver.memory", '4g')
+    #conf.set("spark.executor.cores", "4")
+    #conf.set('spark.executor.instances','10')
+    #conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    #conf.set("spark.default.parallelism", "40")
+    #conf.set("spark.sql.shuffle.partitions", "40")
+    conf.set("spark.blacklist.enabled", "False")
     spark = SparkSession.builder.config(conf=conf).appName('first_train').getOrCreate()
     sc = spark.sparkContext
 
