@@ -77,7 +77,7 @@ if __name__ == "__main__":
     spark = SparkSession.builder.config(conf=conf).appName('first_train').getOrCreate()
     sc = spark.sparkContext
 
-    spark = SparkSession.builder.appName('first_step').getOrCreate()
+    #spark = SparkSession.builder.appName('first_step').getOrCreate()
     # Get file_path for dataset to analyze
     train_path = sys.argv[1]
     val_path = sys.argv[2]
