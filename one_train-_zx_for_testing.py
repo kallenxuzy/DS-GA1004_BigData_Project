@@ -54,7 +54,7 @@ def main(spark, train_path, val_path, indexer_model):
                     .where('rank <= {0}'.format(500)).groupBy('user_idx') \
                     .agg(expr('collect_list(track_idx) as true_track_idx'))
     #true_tracks = true_tracks.select('user_idx', '')
-    pred_RDD = pred_tracks.join(true_tracks, 'user_idx').rdd.map(lambda row: ([rec.track_idx for rec in row["recommendations"]],row["true_track_idx"]))#(row['tracks'], row['true_track_idx']))
+    pred_RDD = rec_result.join(true_tracks, 'user_idx').rdd.map(lambda row: ([rec.track_idx for rec in row["recommendations"]],row["true_track_idx"])) #(row['tracks'], row['true_track_idx']))
     ranking_metrics = RankingMetrics(pred_RDD)
     map_ = ranking_metrics.meanAveragePrecision
     mpa = ranking_metrics.precisionAt(500)
