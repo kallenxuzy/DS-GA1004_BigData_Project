@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 '''
+Usage:
+$ spark-submit --driver-memory=4g --executor-memory=4g --conf "spark.blaclist.enabled=false" one_train3.py hdfs:/user/te2049/train_index.parquet hdfs:/user/bm106/pub/MSD/cf_test.parquet hdfs:/user/te2049/indexer.parquet
 '''
 
 # We need sys to get the command line arguments
@@ -26,38 +28,44 @@ def main(spark, train_path, val_path, test_path):
     '''
     train = spark.read.parquet(train_path)
     val = spark.read.parquet(val_path)
+    user_index = PipelineModel.load(indexer_model)
+    val = user_index.transform(val)
+    val = val.select('user_idx','track_idx','count')
 
     #train.persist(pyspark.StorageLevel.MEMORY_AND_DISK)
     #val.persist(pyspark.StorageLevel.MEMORY_AND_DISK)
+
+    user_id = val.select('user_idx').distinct()
+    true_tracks = val.select('user_idx', 'track_idx').groupBy('user_idx')\
+            .agg(expr('collect_list(track_idx) as tracks'))
 
     rank_val = [10, 20, 30] #default is 10
     reg_val = [ .01, .1, 1] #default is 1
     alpha_val = [ .5, 1, 10] #default is 1
     param_grid = itertools.product(rank_val, reg_val, alpha_val)
-    user_id = val.select('user_idx').distinct()
 
-    #true_tracks = val.select('user_idx', 'track_idx')\
-    #            .groupBy('user_idx')\
-    #            .agg(expr('collect_list(track_idx) as tracks'))
 
     for i in param_grid:
         als = ALS(maxIter=1, userCol ='user_idx', itemCol = 'track_idx', implicitPrefs = True,
         nonnegative=True, ratingCol = 'count', rank = i[0], regParam = i[1], alpha = i[2])
         model = als.fit(train)
 
-        rec_result = model.recommendForUserSubset(user_id,500)
-        pred_tracks = rec_result.select('user_idx','recommendations.track_idx').withColumnRenamed('recommendations.track_idx', 'tracks')
+        pred_tracks = model.recommendForUserSubset(user_id,500)
+        pred_tracks = pred_tracks.select("user_idx", col("recommendations.track_idx").alias("tracks")).sort('user_idx')
 
-        w = Window.partitionBy('user_idx').orderBy(col('count').desc())
-        true_tracks = val.select('user_idx', 'track_idx', 'count', F.rank().over(w).alias('rank')) \
-                        .where('rank <= {0}'.format(500)).groupBy('user_idx') \
-                        .agg(expr('collect_list(track_idx) as tracks'))
-        pred_RDD = pred_tracks.join(true_tracks, 'user_idx').rdd.map(lambda row: (row[1], row[2]))
-        ranking_metrics = RankingMetrics(pred_RDD)
-        map_ = metrics.meanAveragePrecision
-        mpa = metrics.precisionAt(500)
+        tracks_rdd = pred_tracks.join(F.broadcast(true_tracks), 'user_idx', 'inner') \
+                    .rdd.map(lambda row: (row[1], row[2]))
+        metrics = RankingMetrics(tracks_rdd)
+        map = metrics.meanAveragePrecision
+        prec = metrics.precisionAt(500)
         ndcg = metrics.ndcgAt(500)
-        print(i, 'map score: ', map_, 'ndcg score: ', ndcg, 'map score: ', mpa)
+        print('params-rank,reg,alpha: ', i )
+        print('meanAveragePrecision: ', map, 'precisionAt: ', prec, 'ndcg: ', ndcg )
+
+        preds = model.transform(val)
+        reg_evaluator = RegressionEvaluator(metricName="rmse", labelCol="count",predictionCol="prediction")
+        rmse = reg_evaluator.evaluate(preds)
+        print('rmse: ', rmse)
 
 
 

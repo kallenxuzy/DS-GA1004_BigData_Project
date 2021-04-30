@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''
 Usage:
-    $ spark-submit sample_indexer.py hdfs:/user/bm106/pub/MSD/cf_train.parquet hdfs:/user/bm106/pub/MSD/cf_validation.parquet hdfs:/user/bm106/pub/MSD/cf_test.parquet
+$ spark-submit  --driver-memory=4g --executor-memory=4g --conf "spark.blaclist.enabled=false" sample_indexer.py hdfs:/user/bm106/pub/MSD/cf_train.parquet hdfs:/user/bm106/pub/MSD/cf_validation.parquet hdfs:/user/bm106/pub/MSD/cf_test.parquet
 '''
 
 # We need sys to get the command line arguments
@@ -38,8 +38,8 @@ def main(spark, train_path, val_path, test_path):
     user_sampled = random.sample(user_to_sample, k)
     train = train[train.user_id.isin(list(user_test)+user_sampled)]
 
-    indexer_user = StringIndexer(inputCol="user_id", outputCol="user_idx")
-    indexer_track = StringIndexer(inputCol="track_id", outputCol="track_idx")
+    indexer_user = StringIndexer(inputCol="user_id", outputCol="user_idx",handleInvalid='skip')
+    indexer_track = StringIndexer(inputCol="track_id", outputCol="track_idx",handleInvalid='skip')
 
     pipeline = Pipeline(stages=[indexer_user,indexer_track])
     indexer_all = pipeline.fit(train)
