@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''
 Usage:
-    $ spark-submit --driver-memory=4g --executor-memory=4g --conf "spark.blaclist.enabled=false" one_train3.py hdfs:/user/te2049/train_index.parquet hdfs:/user/bm106/pub/MSD/cf_test.parquet hdfs:/user/te2049/indexer.parquet
+    $ spark-submit --driver-memory=4g --executor-memory=4g --conf "spark.blacklist.enabled=false" one_train3.py hdfs:/user/te2049/train_index.parquet hdfs:/user/bm106/pub/MSD/cf_test.parquet hdfs:/user/te2049/indexer.parquet
 '''
 
 # We need sys to get the command line arguments
@@ -38,8 +38,8 @@ def main(spark, train_path, val_path, indexer_model):
     true_tracks = val.select('user_idx', 'track_idx').groupBy('user_idx')\
                 .agg(expr('collect_list(track_idx) as tracks'))
 
-    als = ALS(maxIter=1, userCol ='user_idx', itemCol = 'track_idx', implicitPrefs = True, \
-        nonnegative=True, ratingCol = 'count', rank = 10, regParam = 1, alpha = 1)
+    als = ALS(maxIter=10, userCol ='user_idx', itemCol = 'track_idx', implicitPrefs = True, \
+        nonnegative=True, ratingCol = 'count', rank = 30, regParam = 1, alpha = 10)
     model = als.fit(train)
 
     pred_tracks = model.recommendForUserSubset(user_id,500)
