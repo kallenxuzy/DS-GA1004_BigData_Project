@@ -55,7 +55,7 @@ def main(spark, train_path, val_path, indexer_model):
                     .agg(expr('collect_list(track_idx) as true_track_idx'))
     #true_tracks = true_tracks.select('user_idx', '')
     pred_RDD = rec_result.join(true_tracks, 'user_idx').rdd.map(lambda row: ([rec.track_idx for rec in row["recommendations"]],row["true_track_idx"])) #(row['tracks'], row['true_track_idx']))
-    pred_RDD.take(10).foreach(println)
+    pred_RDD.take(10).foreach(print)
     #ranking_metrics = RankingMetrics(pred_RDD)
     #map_ = ranking_metrics.meanAveragePrecision
     #mpa = ranking_metrics.precisionAt(500)
@@ -66,16 +66,16 @@ def main(spark, train_path, val_path, indexer_model):
 
 # Only enter this block if we're in main
 if __name__ == "__main__":
-    #conf = SparkConf()
-    #conf.set("spark.executor.memory", "4g")
-    #conf.set("spark.driver.memory", '4g')
+    conf = SparkConf()
+    conf.set("spark.executor.memory", "4g")
+    conf.set("spark.driver.memory", '4g')
     #conf.set("spark.executor.cores", "4")
     #conf.set('spark.executor.instances','10')
     #conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
     #conf.set("spark.default.parallelism", "40")
     #conf.set("spark.sql.shuffle.partitions", "40")
-    #conf.set("spark.blacklist.enabled", "False")
-    #spark = SparkSession.builder.config(conf=conf).appName('first_train').getOrCreate()
+    conf.set("spark.blacklist.enabled", "False")
+    spark = SparkSession.builder.config(conf=conf).appName('first_train').getOrCreate()
     #sc = spark.sparkContext
 
     spark = SparkSession.builder.appName('first_step').getOrCreate()
