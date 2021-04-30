@@ -54,8 +54,9 @@ def main(spark, train_path, val_path, indexer_model):
                     .where('rank <= {}'.format(500)).groupBy('user_idx') \
                     .agg(expr('collect_list(track_idx) as true_track_idx'))
     #true_tracks = true_tracks.select('user_idx', '')
-    pred_RDD = rec_result.join(true_tracks, 'user_idx').rdd.map(lambda row: ([rec.track_idx for rec in row["recommendations"]],row["true_track_idx"])) #(row['tracks'], row['true_track_idx']))
-    pred_RDD.take(10).foreach(print)
+    pred_RDD = rec_result.join(true_tracks, 'user_idx', 'inner')\
+               .rdd.map(lambda row: ([rec.track_idx for rec in row["recommendations"]],row["true_track_idx"])) #(row['tracks'], row['true_track_idx']))
+    pred_RDD.take(10)
     #ranking_metrics = RankingMetrics(pred_RDD)
     #map_ = ranking_metrics.meanAveragePrecision
     #mpa = ranking_metrics.precisionAt(500)
@@ -78,7 +79,7 @@ if __name__ == "__main__":
     spark = SparkSession.builder.config(conf=conf).appName('first_train').getOrCreate()
     #sc = spark.sparkContext
 
-    spark = SparkSession.builder.appName('first_step').getOrCreate()
+    #park = SparkSession.builder.appName('first_step').getOrCreate()
     # Get file_path for dataset to analyze
     train_path = sys.argv[1]
     val_path = sys.argv[2]
