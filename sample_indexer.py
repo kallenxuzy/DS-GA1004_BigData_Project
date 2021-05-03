@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''
 Usage:
-$ spark-submit  --driver-memory=4g --executor-memory=4g --conf "spark.blaclist.enabled=false" sample_indexer.py hdfs:/user/bm106/pub/MSD/cf_train.parquet hdfs:/user/bm106/pub/MSD/cf_validation.parquet hdfs:/user/bm106/pub/MSD/cf_test.parquet
+$ spark-submit  --driver-memory=4g --executor-memory=4g --conf "spark.blacklist.enabled=false" sample_indexer.py hdfs:/user/bm106/pub/MSD/cf_train_new.parquet hdfs:/user/bm106/pub/MSD/cf_validation.parquet hdfs:/user/bm106/pub/MSD/cf_test.parquet
 '''
 
 # We need sys to get the command line arguments
@@ -32,8 +32,8 @@ def main(spark, train_path, val_path, test_path):
     user_test=user_test.union(user_val)
     user_to_sample = user_train.difference(user_test)
 
-    #sampling fraction - 0.05, 0.1, 0.25
-    frac=0.05
+    #0.5 from learning curve for downsample
+    frac=0.5
     k = int(frac * len(user_to_sample))
     user_sampled = random.sample(user_to_sample, k)
     train = train[train.user_id.isin(list(user_test)+user_sampled)]
@@ -45,25 +45,25 @@ def main(spark, train_path, val_path, test_path):
     indexer_all = pipeline.fit(train)
 
     train_idx = indexer_all.transform(train)
-    indexer_all.write().overwrite().save('hdfs:/user/te2049/indexer.parquet')
+    indexer_all.write().overwrite().save('hdfs:/user/te2049/indexer_downsample.parquet')
 
     train_idx.repartition(5000,'user_idx')
-    train_idx.write.mode('overwrite').parquet('hdfs:/user/te2049/train_index.parquet')
-
+    train_idx.write.mode('overwrite').parquet('hdfs:/user/te2049/train_index_downsample.parquet')
 
 # Only enter this block if we're in main
 if __name__ == "__main__":
-    conf = SparkConf()
-    conf.set("spark.executor.memory", "16G")
-    conf.set("spark.driver.memory", '16G')
-    conf.set("spark.executor.cores", "4")
-    conf.set('spark.executor.instances','10')
-    conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    conf.set("spark.default.parallelism", "40")
-    conf.set("spark.sql.shuffle.partitions", "40")
-    spark = SparkSession.builder.config(conf=conf).appName('first_step').getOrCreate()
+    #conf = SparkConf()
+    #conf.set("spark.executor.memory", "16G")
+    #conf.set("spark.driver.memory", '16G')
+    #conf.set("spark.executor.cores", "4")
+    #conf.set('spark.executor.instances','10')
+    #conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+    #conf.set("spark.default.parallelism", "40")
+    #conf.set("spark.sql.shuffle.partitions", "40")
+    #spark = SparkSession.builder.config(conf=conf).appName('first_train').getOrCreate()
 
-    #spark = SparkSession.builder.appName('first_step').getOrCreate()
+    spark = SparkSession.builder.appName('first_step').getOrCreate()
+
     # Get file_path for dataset to analyze
     train_path = sys.argv[1]
     val_path = sys.argv[2]
