@@ -81,7 +81,7 @@ def main(spark, train_path, val_path, indexer_model):
     print('param_grid-rank,reg,alpha: ', param_grid)
     print('maps: ', maps)
     print('precs: ', precs)
-    print('ncdgs: ', ncdgs)
+    print('ncdgs: ', ndcgs)
     print('rmses: ', rmses)
 
 

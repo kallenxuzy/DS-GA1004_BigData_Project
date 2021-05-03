@@ -80,7 +80,7 @@ def main(spark, train_path, val_path, indexer_model):
     print('ranks: ', rank_val)
     print('maps: ', maps)
     print('precs: ', precs)
-    print('ncdgs: ', ncdgs)
+    print('ncdgs: ', ndcgs)
     print('rmses: ', rmses)
 
 
