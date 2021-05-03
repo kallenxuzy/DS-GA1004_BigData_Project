@@ -3,6 +3,7 @@
 '''
 Usage:
 $ spark-submit --driver-memory=8g --executor-memory=8g --conf "spark.blacklist.enabled=false" param_train.py hdfs:/user/te2049/train_index_downsample.parquet hdfs:/user/bm106/pub/MSD/cf_validation.parquet hdfs:/user/te2049/indexer_downsample.parquet
+'''
 
 # We need sys to get the command line arguments
 import sys
@@ -51,7 +52,7 @@ def main(spark, train_path, val_path, indexer_model):
 
     for i in param_grid:
         als = ALS(maxIter=10, userCol ='user_idx', itemCol = 'track_idx', implicitPrefs = True,
-        nonnegative=True, ratingCol = 'count', rank = i[0], regParam = i[1], alpha = i[2],numUserBlocks = 30, numItemBlocks = 30, seed=123)
+        nonnegative=True, ratingCol = 'count', rank = i[0], regParam = i[1], alpha = i[2],numUserBlocks = 50, numItemBlocks = 50, seed=123)
         model = als.fit(train)
 
         pred_tracks = model.recommendForUserSubset(user_id,500)

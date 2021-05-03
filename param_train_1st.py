@@ -51,7 +51,7 @@ def main(spark, train_path, val_path, indexer_model):
 
     for i in rank_val: #change to reg or alpha #then set the rest to default
         als = ALS(maxIter=10, userCol ='user_idx', itemCol = 'track_idx', implicitPrefs = True,
-        nonnegative=True, ratingCol = 'count', rank = i, regParam = 1, alpha = 1, numUserBlocks = 30, numItemBlocks = 30, seed=123)
+        nonnegative=True, ratingCol = 'count', rank = i, regParam = 1, alpha = 1, numUserBlocks = 50, numItemBlocks = 50, seed=123)
         model = als.fit(train)
 
         pred_tracks = model.recommendForUserSubset(user_id,500)
