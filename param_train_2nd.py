@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''
 Usage:
-$ spark-submit --driver-memory=8g --executor-memory=8g --conf "spark.blacklist.enabled=false" param_train.py hdfs:/user/te2049/train_index_downsample.parquet hdfs:/user/bm106/pub/MSD/cf_validation.parquet hdfs:/user/te2049/indexer_downsample.parquet
+$ spark-submit --driver-memory=8g --executor-memory=8g --conf "spark.blacklist.enabled=false" param_train_2nd.py hdfs:/user/te2049/train_index_downsample.parquet hdfs:/user/bm106/pub/MSD/cf_validation.parquet hdfs:/user/te2049/indexer_downsample.parquet
 '''
 
 # We need sys to get the command line arguments
