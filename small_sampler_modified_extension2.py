@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 '''
 Usage:
-    $ spark-submit sample_indexer.py hdfs:/user/bm106/pub/MSD/cf_train.parquet hdfs:/user/bm106/pub/MSD/cf_validation.parquet hdfs:/user/bm106/pub/MSD/cf_test.parquet
+    $ spark-submit small_sampler_modified_extension2.py hdfs:/user/bm106/pub/MSD/cf_train.parquet hdfs:/user/bm106/pub/MSD/cf_validation.parquet hdfs:/user/bm106/pub/MSD/cf_test.parquet
 '''
 
 # We need sys to get the command line arguments
 import sys
-#import numpy as np
+import numpy as np
 # And pyspark.sql to get the spark session
 from pyspark.sql import SparkSession
 from pyspark import SparkConf
