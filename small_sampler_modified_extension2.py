@@ -29,21 +29,16 @@ def main(spark, train_path, val_path, test_path):
     user_val = set(row['user_id'] for row in val.select('user_id').distinct().collect())
     user_test = set(row['user_id'] for row in test.select('user_id').distinct().collect())
 
-    #sample some ids from test and val
-    user_val_sampled=random.sample(user_val, int(0.1 * len(user_val)))
-    val = val[val.user_id.isin(list(user_val_sampled))]
-    user_test_sampled=random.sample(user_test,int(0.1 * len(user_test)))
-    test = test[test.user_id.isin(list(user_test_sampled))]
-
     # combine user_ids for train and val
-    user_test_val=user_test_sampled+user_val_sampled
-    user_to_sample = user_train.difference(user_test_val)
+    user_test=user_test.union(user_val)
+    user_to_sample = user_train.difference(user_test)
 
-    #sampling fraction - 0.001, 0.005, 0.01, 0.05, 0.1, 0.15, 0.2
-    frac=0.001 #[0.005, 0.01, 0.05, 0.1, 0.15, 0.2]
+    # sampling fraction - 0.001, 0.005, 0.01, 0.05, 0.1, 0.15, 0.2
+    # for each fraction, uncomment one fraction number and run the file to prevent saving too many files online
+    frac=0.001 #[0.001, 0.005, 0.01, 0.05, 0.1, 0.15, 0.2]
     k = int(frac * len(user_to_sample))
     user_sampled = random.sample(user_to_sample, k)
-    train = train[train.user_id.isin(list(user_test_val)+user_sampled)]
+    train = train[train.user_id.isin(list(user_test)+user_sampled)]
 
     indexer_user = StringIndexer(inputCol="user_id", outputCol="user_idx",handleInvalid='skip')
     indexer_track = StringIndexer(inputCol="track_id", outputCol="track_idx",handleInvalid='skip')
