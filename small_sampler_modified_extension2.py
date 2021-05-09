@@ -7,14 +7,14 @@ Usage:
 
 # We need sys to get the command line arguments
 import sys
-
+#import numpy as np
 # And pyspark.sql to get the spark session
 from pyspark.sql import SparkSession
 from pyspark import SparkConf
 from pyspark.ml.feature import StringIndexer
 from pyspark.ml import Pipeline
 import random
-import numpy as np
+
 
 def main(spark, train_path, val_path, test_path):
     '''
