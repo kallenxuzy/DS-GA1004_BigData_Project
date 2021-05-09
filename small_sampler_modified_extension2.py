@@ -35,7 +35,7 @@ def main(spark, train_path, val_path, test_path):
 
     # sampling fraction - 0.001, 0.005, 0.01, 0.05, 0.1, 0.15, 0.2
     # for each fraction, uncomment one fraction number and run the file to prevent saving too many files online
-    frac=0.001 #[0.001, 0.005, 0.01, 0.05, 0.1, 0.15, 0.2]
+    frac=0.1 #[0.001, 0.005, 0.01, 0.05, 0.1, 0.15, 0.2]
     k = int(frac * len(user_to_sample))
     user_sampled = random.sample(user_to_sample, k)
     train = train[train.user_id.isin(list(user_test)+user_sampled)]
