@@ -34,8 +34,8 @@ def main(spark, train_path, val_path, test_path):
     data_size=[]
     precs=[]
 
-    for numrow in [49923]:#, 248838, 497832, 2492065, 4982921, 7471981, 9963586, 17435567]: # of rows - 0.1%, 0.5%, 1%, 5%, 10%, 15%, 20%, 30% of all records - from light
-        train_sampled = random.sample(list(train), numrow)
+    for numrow in [0.001]:#[49923]:#, 248838, 497832, 2492065, 4982921, 7471981, 9963586, 17435567]: # of rows - 0.1%, 0.5%, 1%, 5%, 10%, 15%, 20%, 30% of all records - from light
+        train_sampled = train.sample(numrow)
 
         indexer_user = StringIndexer(inputCol="user_id", outputCol="user_idx",handleInvalid='skip')
         indexer_track = StringIndexer(inputCol="track_id", outputCol="track_idx",handleInvalid='skip')
