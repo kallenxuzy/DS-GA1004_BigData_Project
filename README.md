@@ -29,7 +29,7 @@ For complete instruction and structure of project, please refer to original proj
   - ***Exploration-EDA.ipynb***: data cleaning and outputs df_final.csv for UMAP
   - **UMAP visualization_Final.ipynb**: UMAP parameter tuning and visualization for default ALS
   - **UMAP visualization_Final_BestALS.ipynb**: UMAP parameter tuning and visualization for best ALS
-  Data used:
+ - Data used:
   - ***Genre_10.csv***: top 13 track genres cleaned and saved from Exploration-EDA.ipynb
   - ***df_final.csv***: cleaned music metadata for UMAP visualization from Exploration-EDA.ipynb
   - ***dominant_trackgenre.csv***: cleaned list of track genre by index order of df_final.csv from Exploration-EDA.ipynb
