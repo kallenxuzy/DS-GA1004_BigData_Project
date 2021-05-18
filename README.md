@@ -25,16 +25,16 @@ For complete instruction and structure of project, please refer to original proj
   - ***extension2_1004project.ipynb***: LightFM implementation
   
 - Latent factor exploration
-  - Exploration-EDA.ipynb: data cleaning and outputs df_final.csv for UMAP
-  - UMAP visualization_Final.ipynb: UMAP parameter tuning and visualization for default ALS
-  - UMAP visualization_Final_BestALS.ipynb: UMAP parameter tuning and visualization for best ALS
+  - ***Exploration-EDA.ipynb***: data cleaning and outputs df_final.csv for UMAP
+  - **UMAP visualization_Final.ipynb**: UMAP parameter tuning and visualization for default ALS
+  - **UMAP visualization_Final_BestALS.ipynb**: UMAP parameter tuning and visualization for best ALS
   Data used:
-  - Genre_10.csv: top 13 track genres cleaned and saved from Exploration-EDA.ipynb
-  - df_final.csv: cleaned music metadata for UMAP visualization from Exploration-EDA.ipynb
-  - dominant_trackgenre.csv: cleaned list of track genre by index order of df_final.csv from Exploration-EDA.ipynb
-  - item_matrix.csv, user_matric.csv: ALS(10,1,1,max_iter=10) learned item factors and user factors (on 5% training data)
-  - Item_matrix_full.csv: best ALS model learned item factors (on 5% training data)
-  - track_ids.csv: string index output by ALS versus track_ids; used to join metadata with item factors
+  - ***Genre_10.csv***: top 13 track genres cleaned and saved from Exploration-EDA.ipynb
+  - ***df_final.csv***: cleaned music metadata for UMAP visualization from Exploration-EDA.ipynb
+  - ***dominant_trackgenre.csv***: cleaned list of track genre by index order of df_final.csv from Exploration-EDA.ipynb
+  - ***item_matrix.csv, user_matric.csv***: ALS(10,1,1,max_iter=10) learned item factors and user factors (on 5% training data)
+  - ***Item_matrix_full.csv***: best ALS model learned item factors (on 5% training data)
+  - ***track_ids.csv***: string index output by ALS versus track_ids; used to join metadata with item factors
 
 - Final report: 
   - [DSGA_1004_FInal_Report.pdf](to be updated)
