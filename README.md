@@ -25,6 +25,7 @@ For complete instruction and structure of project, please refer to original proj
   - ***extension2_1004project.ipynb***: LightFM implementation
   
 - Latent factor exploration
+  - Under folder '\Extension: UMAP visualization'
   - ***Exploration-EDA.ipynb***: data cleaning and outputs df_final.csv for UMAP
   - **UMAP visualization_Final.ipynb**: UMAP parameter tuning and visualization for default ALS
   - **UMAP visualization_Final_BestALS.ipynb**: UMAP parameter tuning and visualization for best ALS
