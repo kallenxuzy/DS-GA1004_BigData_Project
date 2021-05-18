@@ -14,18 +14,20 @@ For complete instruction and structure of project, please refer to original proj
 ## Description of files:
  
 - Hyperparameter tuning with ALS: 
+  - Under folder 'ALS_model'
   - ***sample_indexer.py***: downsample and StringIndex
   - ***learning_curve.py***: learning curve to determine training set size
   - ***param_train_1st.py***, param_train_2nd.py: parameter tuning for each parameter and for grid search
   - ***one_train.py***: training a single model with set parameters
 
 - Single Machin (LightFM) implementation:
+  - Under folder '\Extension-Single_Machine'
   - LightFM is a package for recommendation system to run on single machine
   - ***als_model_extension_2.py***: Spark ALS (rank=150, regParam=0.05, max_iter=1)
   - ***extension2_1004project.ipynb***: LightFM implementation
   
 - Latent factor exploration
-  - Under folder '\Extension: UMAP visualization'
+  - Under folder '\Extension-UMAP_visualization'
   - ***Exploration-EDA.ipynb***: data cleaning and outputs df_final.csv for UMAP
   - **UMAP visualization_Final.ipynb**: UMAP parameter tuning and visualization for default ALS
   - **UMAP visualization_Final_BestALS.ipynb**: UMAP parameter tuning and visualization for best ALS
