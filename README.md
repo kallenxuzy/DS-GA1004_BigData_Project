@@ -38,7 +38,7 @@ For complete instruction and structure of project, please refer to original proj
   - ***track_ids.csv***: string index output by ALS versus track_ids; used to join metadata with item factors
 
 - Final report: 
-  - [DSGA_1004_FInal_Report.pdf](to be updated)
+  - [DSGA_1004_FInal_Report.pdf](https://github.com/nyu-big-data/final-project-team_gxs/blob/main/1004_MSD_Recommendation_System_Final_Report.pdf)
 
 ## Contributors
 
